@@ -120,6 +120,6 @@ public class Student implements EsKey {
 * 邮件咨询：fan2020@126.com
 
 
-## Links
+## 相关链接
 
 [search.maven.org](https://central.sonatype.com/namespace/io.github.yyfanex) 
