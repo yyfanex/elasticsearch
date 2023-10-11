@@ -23,6 +23,10 @@ public class EsSearchTemplate<T extends EsKey> extends AbstractTemplate<T> imple
         super(configuration);
     }
 
+    public EsSearchTemplate(Class<T> clazz, Configuration configuration) {
+        super(clazz, configuration);
+    }
+
     @Override
     public PagedResponse<T> search(SearchSourceBuilder sourceBuilder) {
         return search(persistentClass, sourceBuilder);

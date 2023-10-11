@@ -3,7 +3,6 @@ package com.zte.elasticsearch.utils;
 import com.zte.elasticsearch.metadata.EsConcurrent;
 import com.zte.elasticsearch.metadata.EsScore;
 import com.zte.elasticsearch.support.JsonMapper;
-import org.apache.commons.collections4.MapUtils;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.action.get.MultiGetResponse;
@@ -12,10 +11,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConvertUtils {
     /**
@@ -41,16 +37,16 @@ public class ConvertUtils {
         return list;
     }
 
-    public static <T> T convert(JsonMapper jsonMapper, GetResponse getResponse, Class<T> clazz) {
+    public static <T> Optional<T> convert(JsonMapper jsonMapper, GetResponse getResponse, Class<T> clazz) {
         if (!getResponse.isExists()) {
-            throw new RuntimeException(String.format("not found index document! index:%s, id:%s", getResponse.getIndex(), getResponse.getId()));
+            return Optional.empty();
         }
         T entity = jsonMapper.bean(clazz, getResponse.getSourceAsString());
         if (EsConcurrent.class.isAssignableFrom(clazz)) {
             ((EsConcurrent) entity).setSeqNo(getResponse.getSeqNo());
             ((EsConcurrent) entity).setPrimaryTerm(getResponse.getPrimaryTerm());
         }
-        return entity;
+        return Optional.of(entity);
     }
 
     public static <T> List<T> convert(JsonMapper jsonMapper, MultiGetResponse multiGetResponse, Class<T> clazz) {
@@ -62,9 +58,9 @@ public class ConvertUtils {
             if (response.getFailure() != null) {
                 throw new RuntimeException(response.getFailure().getMessage());
             }
-            T entity = convert(jsonMapper, response.getResponse(), clazz);
-            if (entity != null) {
-                list.add(entity);
+            Optional<T> entity = convert(jsonMapper, response.getResponse(), clazz);
+            if (entity.isPresent()) {
+                list.add(entity.get());
             }
         }
         return list;

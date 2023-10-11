@@ -9,6 +9,7 @@ import org.elasticsearch.action.get.MultiGetRequest;
 import org.elasticsearch.action.get.MultiGetResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EsGetTemplate<T extends EsKey> extends AbstractTemplate<T> implements GetMapper<T> {
 
@@ -16,8 +17,12 @@ public class EsGetTemplate<T extends EsKey> extends AbstractTemplate<T> implemen
         super(configuration);
     }
 
+    public EsGetTemplate(Class<T> clazz, Configuration configuration) {
+        super(clazz, configuration);
+    }
+
     @Override
-    public T get(String id) {
+    public Optional<T> get(String id) {
         GetRequest request = new GetRequest()
                 .index(index)
                 .id(id);

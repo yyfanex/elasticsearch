@@ -20,13 +20,17 @@ public class EsUpdateTemplate<T extends EsKey> extends AbstractTemplate<T> imple
         super(configuration);
     }
 
+    public EsUpdateTemplate(Class<T> clazz, Configuration configuration) {
+        super(clazz, configuration);
+    }
+
     @Override
     public void update(String primaryKey, Map<String, Object> params, String script) {
         UpdateRequest updateRequest = new UpdateRequest()
                 .index(index)
                 .id(primaryKey)
                 .script(new Script(Script.DEFAULT_SCRIPT_TYPE, Script.DEFAULT_SCRIPT_LANG, script, params));
-        updateRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        updateRequest.setRefreshPolicy(configuration.getRefreshPolicy());
         UpdateResponse updateResponse = configuration.getEsClient().update(updateRequest);
         ResponseUtils.handleResponse(updateResponse);
     }
@@ -34,7 +38,7 @@ public class EsUpdateTemplate<T extends EsKey> extends AbstractTemplate<T> imple
     @Override
     public void update(T entity, String script) {
         UpdateRequest updateRequest = buildUpdateRequest(entity, script);
-        updateRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        updateRequest.setRefreshPolicy(configuration.getRefreshPolicy());
         UpdateResponse updateResponse = configuration.getEsClient().update(updateRequest);
         ResponseUtils.handleResponse(updateResponse);
     }

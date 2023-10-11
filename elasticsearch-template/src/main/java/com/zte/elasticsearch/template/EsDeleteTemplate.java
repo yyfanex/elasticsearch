@@ -12,6 +12,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +21,15 @@ public class EsDeleteTemplate<T extends EsKey> extends AbstractTemplate<T> imple
         super(configuration);
     }
 
+    public EsDeleteTemplate(Class<T> clazz, Configuration configuration) {
+        super(clazz, configuration);
+    }
+
     @Override
     public void delete(String key) {
         DeleteRequest request = new DeleteRequest(index)
                 .id(key);
-        request.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        request.setRefreshPolicy(configuration.getRefreshPolicy());
         DeleteResponse deleteResponse = configuration.getEsClient().delete(request);
         ResponseUtils.handleResponse(deleteResponse);
     }

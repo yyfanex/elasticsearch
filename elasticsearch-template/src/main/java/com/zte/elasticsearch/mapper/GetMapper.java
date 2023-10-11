@@ -3,11 +3,12 @@ package com.zte.elasticsearch.mapper;
 import com.zte.elasticsearch.metadata.EsKey;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GetMapper<T extends EsKey> {
-    T get(String key);
+    Optional<T> get(String key);
 
-    default T get(T record) {
+    default Optional<T> get(T record) {
         return get(record.primaryKey());
     }
 

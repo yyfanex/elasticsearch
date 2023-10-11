@@ -10,10 +10,11 @@ import org.elasticsearch.client.RequestOptions;
 
 import javax.persistence.Table;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
-class AbstractTemplate<T extends EsKey> {
+public abstract class AbstractTemplate<T extends EsKey> {
     protected String index;
 
     protected Class<T> persistentClass;
@@ -27,10 +28,17 @@ class AbstractTemplate<T extends EsKey> {
         index = tableAnnotation.name();
     }
 
+    public AbstractTemplate(Class<T> clazz, Configuration configuration) {
+        this.configuration = configuration;
+        this.persistentClass = clazz;
+        Table tableAnnotation = persistentClass.getAnnotation(Table.class);
+        index = tableAnnotation.name();
+    }
+
     protected void bulkRequest(DocWriteRequest<?>... requests) {
         BulkRequest bulkRequest = new BulkRequest();
         Arrays.stream(requests).forEach(request -> bulkRequest.add(request));
-        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        bulkRequest.setRefreshPolicy(configuration.getRefreshPolicy());
         BulkResponse bulkResponse = configuration.getEsClient().bulk(bulkRequest, RequestOptions.DEFAULT);
         ResponseUtils.handleResponse(bulkResponse);
     }
@@ -38,7 +46,7 @@ class AbstractTemplate<T extends EsKey> {
     protected void bulkRequest(List<DocWriteRequest<?>> requests) {
         BulkRequest bulkRequest = new BulkRequest();
         requests.stream().forEach(request -> bulkRequest.add(request));
-        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        bulkRequest.setRefreshPolicy(configuration.getRefreshPolicy());
         BulkResponse bulkResponse = configuration.getEsClient().bulk(bulkRequest, RequestOptions.DEFAULT);
         ResponseUtils.handleResponse(bulkResponse);
     }

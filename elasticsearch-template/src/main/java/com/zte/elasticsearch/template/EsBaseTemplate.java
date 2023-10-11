@@ -5,61 +5,29 @@ import com.zte.elasticsearch.mapper.*;
 import com.zte.elasticsearch.metadata.*;
 import com.zte.elasticsearch.support.EsConverter;
 import com.zte.elasticsearch.support.EsSearchSourceBuilder;
-import com.zte.elasticsearch.support.JsonMapper;
-import com.zte.elasticsearch.utils.CollectionsUtil;
-import com.zte.elasticsearch.utils.ConvertUtils;
-import com.zte.elasticsearch.utils.ResponseUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.DocWriteRequest;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetRequest;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.get.MultiGetRequest;
-import org.elasticsearch.action.get.MultiGetResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchScrollRequest;
-import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.action.update.UpdateResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.common.unit.TimeValue;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.DeleteByQueryRequest;
-import org.elasticsearch.script.Script;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
-import javax.persistence.Table;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
-public final class EsTemplate<T extends EsKey> extends AbstractTemplate<T> implements BaseMapper<T>{
+public class EsBaseTemplate<T extends EsKey> extends AbstractTemplate<T> implements BaseMapper<T>{
     private EsGetTemplate<T> getTemplate;
     private EsIndexTemplate<T> indexTemplate;
     private EsDeleteTemplate<T> deleteTemplate;
     private EsUpdateTemplate<T> updateTemplate;
     private EsSearchTemplate<T> searchTemplate;
 
-    public EsTemplate(Configuration configuration) {
+    public EsBaseTemplate(Configuration configuration) {
         super(configuration);
-        getTemplate = new EsGetTemplate<>(configuration);
-        indexTemplate = new EsIndexTemplate<>(configuration);
-        deleteTemplate = new EsDeleteTemplate<>(configuration);
-        updateTemplate = new EsUpdateTemplate<>(configuration);
-        searchTemplate = new EsSearchTemplate<>(configuration);
+        getTemplate = new EsGetTemplate<>(persistentClass, configuration);
+        indexTemplate = new EsIndexTemplate<>(persistentClass, configuration);
+        deleteTemplate = new EsDeleteTemplate<>(persistentClass, configuration);
+        updateTemplate = new EsUpdateTemplate<>(persistentClass, configuration);
+        searchTemplate = new EsSearchTemplate<>(persistentClass, configuration);
     }
 
     @Override
-    public T get(String id) {
+    public Optional<T> get(String id) {
         return getTemplate.get(id);
     }
 

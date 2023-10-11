@@ -20,10 +20,14 @@ public class EsIndexTemplate<T extends EsKey> extends AbstractTemplate<T> implem
         super(configuration);
     }
 
+    public EsIndexTemplate(Class<T> clazz, Configuration configuration) {
+        super(clazz, configuration);
+    }
+
     @Override
     public void index(T entity) {
         IndexRequest indexRequest = buildIndexRequest(entity);
-        indexRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE);
+        indexRequest.setRefreshPolicy(configuration.getRefreshPolicy());
         IndexResponse indexResponse = configuration.getEsClient().index(indexRequest);
         ResponseUtils.handleResponse(indexResponse);
     }
