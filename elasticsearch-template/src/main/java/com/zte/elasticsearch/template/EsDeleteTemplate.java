@@ -1,22 +1,19 @@
 package com.zte.elasticsearch.template;
 
 import com.zte.elasticsearch.mapper.DeleteMapper;
-import com.zte.elasticsearch.mapper.GetMapper;
 import com.zte.elasticsearch.metadata.EsKey;
 import com.zte.elasticsearch.utils.ResponseUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 
-import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EsDeleteTemplate<T extends EsKey> extends AbstractTemplate<T> implements DeleteMapper<T> {
+public class EsDeleteTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements DeleteMapper<T> {
     public EsDeleteTemplate(Configuration configuration) {
         super(configuration);
     }

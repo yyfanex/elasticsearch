@@ -11,7 +11,7 @@ import org.elasticsearch.action.get.MultiGetResponse;
 import java.util.List;
 import java.util.Optional;
 
-public class EsGetTemplate<T extends EsKey> extends AbstractTemplate<T> implements GetMapper<T> {
+public class EsGetTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements GetMapper<T> {
 
     public EsGetTemplate(Configuration configuration) {
         super(configuration);

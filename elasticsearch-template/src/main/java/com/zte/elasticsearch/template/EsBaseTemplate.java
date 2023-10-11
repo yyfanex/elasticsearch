@@ -10,7 +10,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.*;
 
-public class EsBaseTemplate<T extends EsKey> extends AbstractTemplate<T> implements BaseMapper<T>{
+public class EsBaseTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements BaseMapper<T>{
     private EsGetTemplate<T> getTemplate;
     private EsIndexTemplate<T> indexTemplate;
     private EsDeleteTemplate<T> deleteTemplate;

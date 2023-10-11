@@ -1,6 +1,5 @@
 package com.zte.elasticsearch.template;
 
-import com.zte.elasticsearch.mapper.GetMapper;
 import com.zte.elasticsearch.mapper.IndexMapper;
 import com.zte.elasticsearch.metadata.EsConcurrent;
 import com.zte.elasticsearch.metadata.EsKey;
@@ -8,13 +7,12 @@ import com.zte.elasticsearch.utils.ResponseUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EsIndexTemplate<T extends EsKey> extends AbstractTemplate<T> implements IndexMapper<T> {
+public class EsIndexTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements IndexMapper<T> {
 
     public EsIndexTemplate(Configuration configuration) {
         super(configuration);

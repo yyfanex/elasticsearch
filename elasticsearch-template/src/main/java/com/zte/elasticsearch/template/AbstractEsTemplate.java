@@ -5,30 +5,28 @@ import com.zte.elasticsearch.utils.ResponseUtils;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.RequestOptions;
 
 import javax.persistence.Table;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractTemplate<T extends EsKey> {
+public abstract class AbstractEsTemplate<T extends EsKey> {
     protected String index;
 
     protected Class<T> persistentClass;
 
     protected Configuration configuration;
 
-    public AbstractTemplate(Configuration configuration) {
+    public AbstractEsTemplate(Configuration configuration) {
         this.configuration = configuration;
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         Table tableAnnotation = persistentClass.getAnnotation(Table.class);
         index = tableAnnotation.name();
     }
 
-    public AbstractTemplate(Class<T> clazz, Configuration configuration) {
+    public AbstractEsTemplate(Class<T> clazz, Configuration configuration) {
         this.configuration = configuration;
         this.persistentClass = clazz;
         Table tableAnnotation = persistentClass.getAnnotation(Table.class);

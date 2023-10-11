@@ -18,7 +18,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class EsSearchTemplate<T extends EsKey> extends AbstractTemplate<T> implements SearchMapper<T> {
+public class EsSearchTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements SearchMapper<T> {
     public EsSearchTemplate(Configuration configuration) {
         super(configuration);
     }

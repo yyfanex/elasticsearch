@@ -1,12 +1,10 @@
 package com.zte.elasticsearch.template;
 
-import com.zte.elasticsearch.mapper.GetMapper;
 import com.zte.elasticsearch.mapper.UpdateMapper;
 import com.zte.elasticsearch.metadata.EsConcurrent;
 import com.zte.elasticsearch.metadata.EsKey;
 import com.zte.elasticsearch.utils.ResponseUtils;
 import org.elasticsearch.action.DocWriteRequest;
-import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.script.Script;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EsUpdateTemplate<T extends EsKey> extends AbstractTemplate<T> implements UpdateMapper<T> {
+public class EsUpdateTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements UpdateMapper<T> {
     public EsUpdateTemplate(Configuration configuration) {
         super(configuration);
     }

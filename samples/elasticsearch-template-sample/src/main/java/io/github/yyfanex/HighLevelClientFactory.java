@@ -12,12 +12,6 @@ public class HighLevelClientFactory {
 
     public RestHighLevelClient newClient() {
         RestClientBuilder clientBuilder = RestClient.builder(HttpHost.create("10.54.147.135:9204"));
-        clientBuilder.setHttpClientConfigCallback(httpClientBuilder -> {
-//            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("userName", "password"));
-//            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-            return httpClientBuilder;
-        });
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(clientBuilder);
         return restHighLevelClient;
     }
