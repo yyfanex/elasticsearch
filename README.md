@@ -21,20 +21,18 @@
 
 添加Maven依赖：
 
-[source,xml]
-----
+```xml
 <dependency>
     <groupId>io.github.yyfanex</groupId>
     <artifactId>elasticsearch-template</artifactId>
     <version>7.9.2</version>
 </dependency>
 
-----
+```
 
-以下是一个在Java中使用elasticsearch-template的代码示例：
+在Java中使用elasticsearch-template的代码示例：
 
-[source,java]
-----
+```java
 
 public class EsTemplateSample { 
     public static void main(String[] args) {
@@ -113,7 +111,7 @@ public class Student implements EsKey {
     }
 }
 
-----
+```
 
 ## 帮助
 
