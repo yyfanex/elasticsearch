@@ -12,18 +12,6 @@
     <artifactId>elasticsearch-template-sample</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>io.github.yyfanex</groupId>
-            <artifactId>elasticsearch-template</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

@@ -11,7 +11,7 @@
 
     <properties>
         <revision>1.0.0-SNAPSHOT</revision>
-        <elasticsearch-parent.version>7.9.2-SNAPSHOT</elasticsearch-parent.version>
+        <elasticsearch-parent.version>7.9.2</elasticsearch-parent.version>
     </properties>
 
     <build>
