@@ -113,6 +113,8 @@ public class Student implements EsKey {
 
 ```
 
+更多示例在：samples/elasticsearch-template-sample
+
 ## 帮助
 
 有问题吗？我很乐意提供帮助！
