@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class EsBaseTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements BaseMapper<T>{
     private EsGetTemplate<T> getTemplate;
@@ -39,6 +40,11 @@ public class EsBaseTemplate<T extends EsKey> extends AbstractEsTemplate<T> imple
     @Override
     public void delete(String key) {
         deleteTemplate.delete(key);
+    }
+
+    @Override
+    public void deleteByQuery(BoolQueryBuilder query) {
+        deleteTemplate.deleteByQuery(query);
     }
 
     @Override
@@ -102,23 +108,28 @@ public class EsBaseTemplate<T extends EsKey> extends AbstractEsTemplate<T> imple
     }
 
     @Override
-    public <E extends EsScroll> PagedResponse<List<T>> scrollSearch(E request, EsSearchSourceBuilder<E> builder) {
+    public <E extends EsScroll> PagedResponse<T> scrollSearch(E request, EsSearchSourceBuilder<E> builder) {
         return searchTemplate.scrollSearch(request, builder);
     }
 
     @Override
-    public <T, E extends EsScroll> PagedResponse<List<T>> scrollSearch(Class<T> clazz, E request, EsSearchSourceBuilder<E> builder) {
+    public <T, E extends EsScroll> PagedResponse<T> scrollSearch(Class<T> clazz, E request, EsSearchSourceBuilder<E> builder) {
         return searchTemplate.scrollSearch(clazz, request, builder);
     }
 
     @Override
-    public <T1, E extends EsScroll> PagedResponse<List<T1>> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter) {
+    public <T1, E extends EsScroll> PagedResponse<T1> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter) {
         return searchTemplate.scrollSearch(clazz, request, builder, converter);
     }
 
     @Override
-    public void deleteByQuery(BoolQueryBuilder query) {
-        deleteTemplate.deleteByQuery(query);
+    public <E extends EsScroll> void scrollAll(E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T>> consumer) {
+        searchTemplate.scrollAll(request, builder, consumer);
+    }
+
+    @Override
+    public <T1, E extends EsScroll> void scrollAll(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T1>> consumer) {
+        searchTemplate.scrollAll(clazz, request, builder, consumer);
     }
 
 }

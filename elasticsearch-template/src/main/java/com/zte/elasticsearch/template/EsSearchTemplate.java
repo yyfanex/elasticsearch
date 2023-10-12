@@ -7,6 +7,7 @@ import com.zte.elasticsearch.metadata.EsScroll;
 import com.zte.elasticsearch.support.EsConverter;
 import com.zte.elasticsearch.support.EsSearchSourceBuilder;
 import com.zte.elasticsearch.support.JsonMapper;
+import com.zte.elasticsearch.utils.CollectionsUtil;
 import com.zte.elasticsearch.utils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
@@ -17,6 +18,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class EsSearchTemplate<T extends EsKey> extends AbstractEsTemplate<T> implements SearchMapper<T> {
     public EsSearchTemplate(Configuration configuration) {
@@ -64,17 +66,17 @@ public class EsSearchTemplate<T extends EsKey> extends AbstractEsTemplate<T> imp
     }
 
     @Override
-    public <E extends EsScroll> PagedResponse<List<T>> scrollSearch(E request, EsSearchSourceBuilder<E> builder) {
+    public <E extends EsScroll> PagedResponse<T> scrollSearch(E request, EsSearchSourceBuilder<E> builder) {
         return scrollSearch(persistentClass, request, builder, ConvertUtils::convert);
     }
 
     @Override
-    public <T1, E extends EsScroll> PagedResponse<List<T1>> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder) {
+    public <T1, E extends EsScroll> PagedResponse<T1> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder) {
         return scrollSearch(clazz, request, builder, ConvertUtils::convert);
     }
 
     @Override
-    public <T1, E extends EsScroll> PagedResponse<List<T1>> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter) {
+    public <T1, E extends EsScroll> PagedResponse<T1> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter) {
         SearchResponse searchResponse;
         if (request.getScroll() != null && request.getScroll() && StringUtils.isNotBlank(request.getScrollId())) {
             SearchScrollRequest scrollRequest = new SearchScrollRequest(request.getScrollId())
@@ -95,4 +97,31 @@ public class EsSearchTemplate<T extends EsKey> extends AbstractEsTemplate<T> imp
         List<T1> list = converter.convert(configuration.getJsonMapper(), searchResponse, clazz);
         return PagedResponse.success(list, (int)searchResponse.getHits().getTotalHits().value, searchResponse.getScrollId());
     }
+
+    @Override
+    public <E extends EsScroll> void scrollAll(E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T>> consumer) {
+        request.setScroll(true);
+        PagedResponse<T> response;
+        do {
+            response = scrollSearch(request, builder);
+            if (CollectionsUtil.isNotEmpty(response.getBo())) {
+                consumer.accept(response);
+            }
+        }
+        while (CollectionsUtil.isNotEmpty(response.getBo()));
+    }
+
+    @Override
+    public <T1, E extends EsScroll> void scrollAll(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T1>> consumer) {
+        request.setScroll(true);
+        PagedResponse<T1> response;
+        do {
+            response = scrollSearch(clazz, request, builder);
+            if (CollectionsUtil.isNotEmpty(response.getBo())) {
+                consumer.accept(response);
+            }
+        }
+        while (CollectionsUtil.isNotEmpty(response.getBo()));
+    }
+
 }
