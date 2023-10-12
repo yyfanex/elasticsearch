@@ -7,6 +7,7 @@ import com.zte.elasticsearch.support.EsSearchSourceBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface SearchMapper<T> {
     PagedResponse<T> search(SearchSourceBuilder sourceBuilder);
@@ -21,9 +22,12 @@ public interface SearchMapper<T> {
 
     <T1> PagedResponse<T1> search(SearchSourceBuilder sourceBuilder, Class<T1> persistentClass, EsConverter<T1> converter);
 
-    <E extends EsScroll> PagedResponse<List<T>> scrollSearch(E request, EsSearchSourceBuilder<E> builder);
+    <E extends EsScroll> PagedResponse<T> scrollSearch(E request, EsSearchSourceBuilder<E> builder);
 
-    <T1, E extends EsScroll> PagedResponse<List<T1>> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder);
+    <T1, E extends EsScroll> PagedResponse<T1> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder);
 
-    <T1, E extends EsScroll> PagedResponse<List<T1>> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter);
+    <T1, E extends EsScroll> PagedResponse<T1> scrollSearch(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, EsConverter<T1> converter);
+
+    <E extends EsScroll> void scrollAll(E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T>> consumer);
+    <T1, E extends EsScroll> void scrollAll(Class<T1> clazz, E request, EsSearchSourceBuilder<E> builder, Consumer<PagedResponse<T1>> consumer);
 }

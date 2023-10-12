@@ -90,7 +90,7 @@ public class HighLevelClientFactory {
     }
 
     public RestHighLevelClient newClient() {
-        RestClientBuilder clientBuilder = RestClient.builder(HttpHost.create("10.54.147.135:9204"));
+        RestClientBuilder clientBuilder = RestClient.builder(HttpHost.create("127.0.0.1:9200"));
         RestHighLevelClient restHighLevelClient = new RestHighLevelClient(clientBuilder);
         return restHighLevelClient;
     }
